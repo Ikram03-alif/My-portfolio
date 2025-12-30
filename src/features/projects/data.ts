@@ -54,12 +54,12 @@ export const education = [
     {
         school: "Universiti Teknologi MARA (UiTM) Shah Alam",
         degree: "Bachelor of Information Systems (Hons.) Informaiton System Engineering",
-        year: "2023 - 2026"
+        year: "2022 - 2026"
     },
     {
         school: "Kolej Matrikulasi Kelantan",
         degree: "Accounting",
-        year: "2020 - 2023",
+        year: "2020 - 2022",
         gpa: "3.54"
     }
 ];
