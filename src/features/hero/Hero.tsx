@@ -154,7 +154,7 @@ export function Hero() {
                             enableMobileTilt={false}
                             behindGlowColor="rgba(0, 243, 255, 0.5)"
                             innerGradient="linear-gradient(145deg, #00f3ff22 0%, #bc13fe33 100%)"
-                            onContactClick={() => window.location.href = 'mailto:ikramalif.roslee@gmail.com'}
+                            onContactClick={() => window.open('https://mail.google.com/mail/?view=cm&fs=1&to=ikramalif.roslee@gmail.com', '_blank')}
                         />
                     </motion.div>
                 </div>
