@@ -15,7 +15,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
     const imageRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!cardRef.current || !imageRef.current) return;
+        if (!cardRef.current) return;
 
         const initAnimations = async () => {
             const gsapModule = await import("gsap");
@@ -25,22 +25,24 @@ export function ProjectCard({ project }: ProjectCardProps) {
             gsap.registerPlugin(ScrollTrigger);
 
             const ctx = gsap.context(() => {
-                // Clip-path reveal from bottom
-                gsap.fromTo(
-                    imageRef.current,
-                    { clipPath: "inset(100% 0 0 0)" },
-                    {
-                        clipPath: "inset(0% 0 0 0)",
-                        duration: 1,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: cardRef.current,
-                            start: "top 85%",
-                            end: "top 50%",
-                            scrub: 0.5,
-                        },
-                    }
-                );
+                // Image reveal (if exists)
+                if (imageRef.current) {
+                    gsap.fromTo(
+                        imageRef.current,
+                        { clipPath: "inset(100% 0 0 0)" },
+                        {
+                            clipPath: "inset(0% 0 0 0)",
+                            duration: 1,
+                            ease: "power2.out",
+                            scrollTrigger: {
+                                trigger: cardRef.current,
+                                start: "top 85%",
+                                end: "top 50%",
+                                scrub: 0.5,
+                            },
+                        }
+                    );
+                }
 
                 // Card fade in
                 gsap.fromTo(
@@ -66,81 +68,126 @@ export function ProjectCard({ project }: ProjectCardProps) {
         initAnimations();
     }, []);
 
-    return (
-        <div ref={cardRef} className="group relative bg-black/40 text-card-foreground transition-all duration-300 hover:-translate-y-2 opacity-0">
-            {/* HUD Borders */}
-            <div className="absolute inset-0 border-2 border-zinc-800 clip-path-hud transition-colors group-hover:border-primary/70 z-20 pointer-events-none" />
-            <div className="absolute -inset-[1px] bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300 z-0 clip-path-hud" />
+    // Layout for Projects WITH Images
+    if (project.imageUrl) {
+        return (
+            <div ref={cardRef} className="group relative w-full min-h-[500px] bg-black border border-zinc-800 opacity-0 overflow-hidden">
 
-            <div className="relative z-10 clip-path-hud bg-zinc-900/50 backdrop-blur-sm h-full flex flex-col">
-                {/* Image with clip-path reveal */}
-                <div
-                    ref={imageRef}
-                    className="aspect-video w-full bg-black overflow-hidden relative border-b border-zinc-800 group-hover:border-primary/50 transition-colors"
-                    style={{ clipPath: "inset(100% 0 0 0)" }}
-                >
-                    <div className="h-full w-full bg-gradient-to-br from-zinc-900 to-black transition-transform duration-500 group-hover:scale-110 opacity-60" />
+                {/* Image Layer */}
+                <div ref={imageRef} className="relative w-full" style={{ clipPath: "inset(100% 0 0 0)" }}>
+                    <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 group-hover:blur-[2px] opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
+
                     {/* Tech Overlay Grid */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20" />
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px] opacity-30 z-10" />
 
-                    <div className="absolute bottom-4 left-4 right-4 z-20">
-                        <div className="flex flex-wrap gap-2 mb-2">
+                    {/* Content Overlay */}
+                    <div className="absolute inset-0 z-30 p-6 md:p-12 flex flex-col justify-end">
+                        {/* Tags */}
+                        <div className="absolute top-6 right-6 flex gap-2">
                             {project.tags.slice(0, 3).map((tag) => (
-                                <span
-                                    key={tag}
-                                    className="inline-flex items-center border border-primary/30 bg-black/80 px-2 py-1 text-[10px] font-bold tracking-widest uppercase text-primary shadow-[0_0_10px_rgba(0,243,255,0.2)]"
-                                >
+                                <span key={tag} className="inline-flex items-center border border-primary/30 bg-black/60 backdrop-blur-md px-3 py-1 text-xs font-bold tracking-widest uppercase text-primary shadow-[0_0_15px_rgba(0,243,255,0.1)]">
                                     {tag}
                                 </span>
                             ))}
                         </div>
+
+                        {/* Info */}
+                        <div className="max-w-4xl space-y-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <h3 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter flex items-center gap-4 drop-shadow-2xl">
+                                <span className="w-3 h-3 md:w-4 md:h-4 bg-primary animate-pulse shadow-[0_0_20px_#00f3ff]" />
+                                {project.title}
+                            </h3>
+
+                            <p className="hidden md:block text-zinc-200 text-lg md:text-xl font-mono leading-relaxed border-l-4 border-primary/50 pl-6 bg-black/60 backdrop-blur-md p-6 rounded-r-lg max-w-3xl shadow-xl">
+                                {project.description}
+                            </p>
+
+                            <div className="flex items-center gap-6 pt-2 md:pt-6">
+                                <Button asChild size="lg" className="rounded-none bg-primary text-black hover:bg-white hover:text-black font-bold uppercase tracking-widest px-6 py-6 text-base md:text-lg shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_40px_rgba(255,255,255,0.6)] transition-all clip-path-button relative overflow-hidden group/btn">
+                                    <Link href={project.demoUrl || "#"}>
+                                        <span className="relative z-10 flex items-center gap-3">
+                                            <ExternalLink className="h-5 w-5" />
+                                            Initialize Broadcast
+                                        </span>
+                                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
+                                    </Link>
+                                </Button>
+                                {project.repoUrl && (
+                                    <Button asChild variant="outline" size="lg" className="rounded-none border-2 border-zinc-500 text-zinc-100 hover:border-white hover:text-black hover:bg-white font-bold uppercase tracking-widest px-6 py-6 text-base md:text-lg backdrop-blur-md bg-black/50 transition-all clip-path-button">
+                                        <Link href={project.repoUrl || "#"}>
+                                            <Github className="h-5 w-5 mr-3" />
+                                            Source Code
+                                        </Link>
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-2xl font-bold leading-none tracking-tight mb-3 text-white group-hover:text-primary transition-colors flex items-center gap-2">
-                        <span className="w-2 h-2 bg-primary rounded-none animate-pulse" />
-                        {project.title}
-                    </h3>
-                    <p className="text-sm text-zinc-400 mb-6 line-clamp-3 font-mono">
-                        {project.description}
-                    </p>
-                    <div className="flex items-center gap-4 mt-auto">
-                        <Button asChild size="sm" className="rounded-none bg-primary text-black hover:bg-white hover:text-black font-bold uppercase tracking-wider clip-path-button">
-                            <Link href={project.demoUrl || "#"}>
-                                <ExternalLink className="h-3 w-3 mr-2" />
-                                Initialize
-                            </Link>
-                        </Button>
-                        {project.repoUrl && (
-                            <Button asChild variant="outline" size="sm" className="rounded-none border-zinc-600 hover:border-white hover:text-white hover:bg-zinc-800 uppercase tracking-wider clip-path-button">
-                                <Link href={project.repoUrl || "#"}>
-                                    <Github className="h-3 w-3 mr-2" />
-                                    Source
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
+                {/* HUD Decorations */}
+                <div className="absolute inset-0 border-2 border-zinc-800 z-20 pointer-events-none group-hover:border-primary/50 transition-colors duration-500" />
+                <div className="absolute top-0 left-0 w-24 h-24 border-l-4 border-t-4 border-primary/30 rounded-tl-3xl z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 right-0 w-24 h-24 border-r-4 border-b-4 border-primary/30 rounded-br-3xl z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                <style jsx global>{`
+                    .clip-path-button { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
+                `}</style>
+            </div>
+        );
+    }
+
+    // Layout for Projects WITHOUT Images (Text Only)
+    return (
+        <div ref={cardRef} className="group relative w-full bg-zinc-900 border border-zinc-800 opacity-0 overflow-hidden p-8 md:p-16 flex flex-col justify-center min-h-[400px]">
+            {/* Tech Background Pattern */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(0,243,255,0.15),transparent_70%)]" />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{
+                    backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, .3) 25%, rgba(0, 255, 255, .3) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, .3) 75%, rgba(0, 255, 255, .3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, .3) 25%, rgba(0, 255, 255, .3) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, .3) 75%, rgba(0, 255, 255, .3) 76%, transparent 77%, transparent)',
+                    backgroundSize: '50px 50px'
+                }}
+            />
+
+            <div className="relative z-10 max-w-4xl mx-auto text-center">
+                {/* Tags Centered */}
+                <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    {project.tags.map((tag) => (
+                        <span key={tag} className="inline-flex items-center border border-zinc-700 bg-black/40 px-3 py-1 text-xs font-bold tracking-widest uppercase text-zinc-400">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+
+                <h3 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6 group-hover:text-primary transition-colors duration-300">
+                    <span className="text-primary mr-3">#</span>{project.title}
+                </h3>
+
+                <p className="text-zinc-400 text-lg md:text-xl font-mono leading-relaxed mb-8 max-w-2xl mx-auto">
+                    {project.description}
+                </p>
+
+                <div className="flex justify-center gap-6">
+                    {/* Simplified Buttons for Text Card */}
+                    <Button asChild size="lg" className="rounded-none bg-zinc-800 text-white hover:bg-primary hover:text-black font-bold uppercase tracking-widest px-8 py-6 clip-path-button transition-all">
+                        <Link href={project.demoUrl || "#"}>
+                            <ExternalLink className="h-5 w-5 mr-3" />
+                            Initialize
+                        </Link>
+                    </Button>
                 </div>
             </div>
 
-            <style jsx global>{`
-                .clip-path-hud {
-                    clip-path: polygon(
-                        0 0, 
-                        100% 0, 
-                        100% 85%, 
-                        95% 100%, 
-                        0 100%, 
-                        0 15%
-                    );
-                }
-                .clip-path-button {
-                    clip-path: polygon(
-                        10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%
-                    );
-                }
-            `}</style>
+            {/* Corner Accents */}
+            <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-zinc-700 opacity-50" />
+            <div className="absolute top-0 right-0 w-8 h-8 border-r-2 border-t-2 border-zinc-700 opacity-50" />
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-l-2 border-b-2 border-zinc-700 opacity-50" />
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-zinc-700 opacity-50" />
         </div>
     );
 }

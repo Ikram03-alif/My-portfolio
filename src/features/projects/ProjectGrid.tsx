@@ -83,7 +83,7 @@ export function ProjectGrid() {
                     Completed operations that showcase system engineering capabilities.
                 </p>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-col gap-8 w-full">
                 {projects.map((project) => (
                     <ProjectCard key={project.id} project={project} />
                 ))}
