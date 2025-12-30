@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Chakra_Petch } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { MusicPlayer } from "@/components/MusicPlayer";
 
 const fontSans = Chakra_Petch({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
         fontSans.variable
       )}>
         {children}
+        <MusicPlayer />
       </body>
     </html>
   );
