@@ -126,7 +126,7 @@ export function MusicPlayer() {
                 initial={false}
                 animate={{
                     width: isMinimized ? "300px" : "350px",
-                    height: isMinimized ? "80px" : "550px",
+                    height: isMinimized ? "80px" : "620px",
                     borderRadius: "20px",
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
