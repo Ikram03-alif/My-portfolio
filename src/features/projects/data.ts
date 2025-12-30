@@ -59,7 +59,7 @@ export const education = [
     {
         school: "Kolej Matrikulasi Kelantan",
         degree: "Accounting",
-        year: "2020 - 2022",
+        year: "2021 - 2022",
         gpa: "3.54"
     }
 ];
