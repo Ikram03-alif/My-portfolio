@@ -6,22 +6,41 @@ import { Play, Pause, SkipForward, SkipBack, Volume2, Maximize2, Minimize2, Musi
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
-// Dummy data - User can replace this later
-const TRACK = {
-    title: "First Love (원곡 _ Hikaru Utada)",
-    artist: "KIM CHAEWON",
-    cover: "/song/maxresdefault.jpg",
-    src: "/song/First Love.mp3" // URL-encoded path
-};
+// Playlist - Add your songs here
+const PLAYLIST = [
+    {
+        title: "First Love (원곡 _ Hikaru Utada)",
+        artist: "KIM CHAEWON",
+        cover: "/song/maxresdefault.jpg",
+        src: "/song/First Love.mp3"
+    },
+    // Add more songs below:
+    {
+        title: "Heavy Love",
+        artist: "Liz (IVE)",
+        cover: "/song/heavyLove.jpg", // Add your cover image
+        src: "/song/Heavy Love.mp3" // Add your audio file
+    },
+    {
+        title: "Confession (Japanese Version)",
+        artist: "Kim Chaewon",
+        cover: "/song/Chaewon.jpg", // Add your cover image
+        src: "/song/Confession (Japanese Version).mp3" // Add your audio file
+    },
+];
 
 export function MusicPlayer() {
-    const [isMinimized, setIsMinimized] = useState(true); // Start minimized
+    const [isMinimized, setIsMinimized] = useState(true);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(0.5);
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
 
     const audioRef = useRef<HTMLAudioElement>(null);
+
+    // Get current track from playlist
+    const currentTrack = PLAYLIST[currentTrackIndex];
 
     // Initial load volume
     useEffect(() => {
@@ -29,6 +48,24 @@ export function MusicPlayer() {
             audioRef.current.volume = volume;
         }
     }, []);
+
+    // Handle track change
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.load();
+            if (isPlaying) {
+                audioRef.current.play();
+            }
+        }
+    }, [currentTrackIndex]);
+
+    const nextTrack = () => {
+        setCurrentTrackIndex((prev) => (prev + 1) % PLAYLIST.length);
+    };
+
+    const prevTrack = () => {
+        setCurrentTrackIndex((prev) => (prev - 1 + PLAYLIST.length) % PLAYLIST.length);
+    };
 
     const togglePlay = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -79,10 +116,10 @@ export function MusicPlayer() {
         <>
             <audio
                 ref={audioRef}
-                src={TRACK.src}
+                src={currentTrack.src}
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
-                onEnded={() => setIsPlaying(false)}
+                onEnded={nextTrack}
             />
 
             <motion.div
@@ -201,7 +238,7 @@ export function MusicPlayer() {
                                         : "inset-[20%] rounded-full border-2 border-primary/50 shadow-[0_0_20px_rgba(0,243,255,0.3)]"
                                 )}>
                                     <img
-                                        src={TRACK.cover}
+                                        src={currentTrack.cover}
                                         alt="Album Art"
                                         className={cn(
                                             "w-full h-full object-cover",
@@ -220,10 +257,10 @@ export function MusicPlayer() {
                         {/* Text Info */}
                         <motion.div layout className={cn("flex flex-col overflow-hidden", isMinimized ? "flex-1 justify-center" : "items-center text-center w-full")}>
                             <h4 className={cn("font-bold text-white truncate w-full", isMinimized ? "text-sm" : "text-xl mb-1")}>
-                                {TRACK.title}
+                                {currentTrack.title}
                             </h4>
                             <p className={cn("text-zinc-400 truncate w-full", isMinimized ? "text-xs" : "text-sm text-primary")}>
-                                {TRACK.artist}
+                                {currentTrack.artist}
                             </p>
                         </motion.div>
 
@@ -264,7 +301,7 @@ export function MusicPlayer() {
 
                                 {/* Main Buttons */}
                                 <div className="flex items-center justify-center gap-8">
-                                    <button className="text-zinc-400 hover:text-white transition-colors">
+                                    <button onClick={prevTrack} className="text-zinc-400 hover:text-white transition-colors">
                                         <SkipBack className="h-6 w-6" />
                                     </button>
 
@@ -275,7 +312,7 @@ export function MusicPlayer() {
                                         {isPlaying ? <Pause className="h-6 w-6 fill-current" /> : <Play className="h-6 w-6 fill-current pl-1" />}
                                     </button>
 
-                                    <button className="text-zinc-400 hover:text-white transition-colors">
+                                    <button onClick={nextTrack} className="text-zinc-400 hover:text-white transition-colors">
                                         <SkipForward className="h-6 w-6" />
                                     </button>
                                 </div>
