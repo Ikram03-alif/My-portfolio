@@ -71,7 +71,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
     // Layout for Projects WITH Images
     if (project.imageUrl) {
         return (
-            <div ref={cardRef} className="group relative w-full md:min-h-[500px] bg-black border border-zinc-800 opacity-0 overflow-hidden">
+            <div ref={cardRef} className="group relative w-full min-h-[250px] md:min-h-[500px] bg-black border border-zinc-800 opacity-0 overflow-hidden">
+
+                {/* Tags - Positioned at card level, not content level */}
+                <div className="absolute top-3 left-3 md:left-auto md:top-6 md:right-6 z-40 flex flex-wrap gap-1 md:gap-2">
+                    {project.tags.slice(0, 2).map((tag) => (
+                        <span key={tag} className="inline-flex items-center border border-primary/30 bg-black/80 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase text-primary">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
 
                 {/* Image Layer */}
                 <div ref={imageRef} className="relative w-full" style={{ clipPath: "inset(100% 0 0 0)" }}>
@@ -86,16 +95,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px] opacity-30 z-10" />
 
                     {/* Content Overlay */}
-                    <div className="absolute inset-0 z-30 p-6 md:p-12 flex flex-col justify-end">
-                        {/* Tags */}
-                        <div className="absolute top-4 right-4 md:top-6 md:right-6 flex flex-wrap gap-1 md:gap-2 max-w-[200px] md:max-w-none justify-end">
-                            {project.tags.slice(0, 2).map((tag) => (
-                                <span key={tag} className="inline-flex items-center border border-primary/30 bg-black/60 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase text-primary shadow-[0_0_15px_rgba(0,243,255,0.1)]">
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-
+                    <div className="absolute inset-0 z-30 p-4 pt-12 md:p-12 flex flex-col justify-end">
                         {/* Info */}
                         <div className="max-w-4xl space-y-3 md:space-y-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                             <h3 className="text-xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter flex items-center gap-2 md:gap-4 drop-shadow-2xl">
