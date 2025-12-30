@@ -53,7 +53,7 @@ export const experience = [
 export const education = [
     {
         school: "Universiti Teknologi MARA (UiTM) Shah Alam",
-        degree: "Bachelor of Information Systems (Hons.) Engineering",
+        degree: "Bachelor of Information Systems (Hons.) Informaiton System Engineering",
         year: "2023 - 2026"
     },
     {

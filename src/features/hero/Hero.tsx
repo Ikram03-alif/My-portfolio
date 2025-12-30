@@ -97,7 +97,7 @@ export function Hero() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="text-lg md:text-2xl text-muted-foreground lg:max-w-xl"
                     >
-                        Bachelor of Information Systems Engineering (Hons)
+                        Bachelor of Information Systems Engineering (Hons) Information System Engineering
                         <br />
                         <span className="text-secondary">UiTM Shah Alam</span>
                     </motion.p>
