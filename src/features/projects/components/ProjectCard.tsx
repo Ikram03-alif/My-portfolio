@@ -71,7 +71,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
     // Layout for Projects WITH Images
     if (project.imageUrl) {
         return (
-            <div ref={cardRef} className="group relative w-full min-h-[500px] bg-black border border-zinc-800 opacity-0 overflow-hidden">
+            <div ref={cardRef} className="group relative w-full md:min-h-[500px] bg-black border border-zinc-800 opacity-0 overflow-hidden">
 
                 {/* Image Layer */}
                 <div ref={imageRef} className="relative w-full" style={{ clipPath: "inset(100% 0 0 0)" }}>
@@ -88,31 +88,32 @@ export function ProjectCard({ project }: ProjectCardProps) {
                     {/* Content Overlay */}
                     <div className="absolute inset-0 z-30 p-6 md:p-12 flex flex-col justify-end">
                         {/* Tags */}
-                        <div className="absolute top-6 right-6 flex gap-2">
-                            {project.tags.slice(0, 3).map((tag) => (
-                                <span key={tag} className="inline-flex items-center border border-primary/30 bg-black/60 backdrop-blur-md px-3 py-1 text-xs font-bold tracking-widest uppercase text-primary shadow-[0_0_15px_rgba(0,243,255,0.1)]">
+                        <div className="absolute top-4 right-4 md:top-6 md:right-6 flex flex-wrap gap-1 md:gap-2 max-w-[200px] md:max-w-none justify-end">
+                            {project.tags.slice(0, 2).map((tag) => (
+                                <span key={tag} className="inline-flex items-center border border-primary/30 bg-black/60 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 text-[10px] md:text-xs font-bold tracking-widest uppercase text-primary shadow-[0_0_15px_rgba(0,243,255,0.1)]">
                                     {tag}
                                 </span>
                             ))}
                         </div>
 
                         {/* Info */}
-                        <div className="max-w-4xl space-y-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <h3 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter flex items-center gap-4 drop-shadow-2xl">
-                                <span className="w-3 h-3 md:w-4 md:h-4 bg-primary animate-pulse shadow-[0_0_20px_#00f3ff]" />
+                        <div className="max-w-4xl space-y-3 md:space-y-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <h3 className="text-xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter flex items-center gap-2 md:gap-4 drop-shadow-2xl">
+                                <span className="w-2 h-2 md:w-4 md:h-4 bg-primary animate-pulse shadow-[0_0_20px_#00f3ff]" />
                                 {project.title}
                             </h3>
 
-                            <p className="hidden md:block text-zinc-200 text-lg md:text-xl font-mono leading-relaxed border-l-4 border-primary/50 pl-6 bg-black/60 backdrop-blur-md p-6 rounded-r-lg max-w-3xl shadow-xl">
+                            <p className="text-zinc-300 text-sm md:text-xl font-mono leading-relaxed md:border-l-4 md:border-primary/50 md:pl-6 md:bg-black/60 md:backdrop-blur-md md:p-6 md:rounded-r-lg max-w-3xl md:shadow-xl line-clamp-2 md:line-clamp-none">
                                 {project.description}
                             </p>
 
-                            <div className="flex items-center gap-6 pt-2 md:pt-6">
-                                <Button asChild size="lg" className="rounded-none bg-primary text-black hover:bg-white hover:text-black font-bold uppercase tracking-widest px-6 py-6 text-base md:text-lg shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_40px_rgba(255,255,255,0.6)] transition-all clip-path-button relative overflow-hidden group/btn">
+                            <div className="flex flex-wrap items-center gap-3 md:gap-6 pt-2 md:pt-6">
+                                <Button asChild size="default" className="rounded-none bg-primary text-black hover:bg-white hover:text-black font-bold uppercase tracking-widest px-3 py-2 md:px-6 md:py-6 text-xs md:text-lg shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_40px_rgba(255,255,255,0.6)] transition-all clip-path-button relative overflow-hidden group/btn">
                                     <Link href={project.demoUrl || "#"}>
-                                        <span className="relative z-10 flex items-center gap-3">
-                                            <ExternalLink className="h-5 w-5" />
-                                            Initialize Broadcast
+                                        <span className="relative z-10 flex items-center gap-2 md:gap-3">
+                                            <ExternalLink className="h-4 w-4 md:h-5 md:w-5" />
+                                            <span className="hidden sm:inline">Initialize Broadcast</span>
+                                            <span className="sm:hidden">View</span>
                                         </span>
                                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300" />
                                     </Link>
